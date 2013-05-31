@@ -48,7 +48,7 @@ module AttrUuid
         if options[:autofill]
           before_create do
             value = self.send(name)
-            if value.nil?
+            if value.blank?
               uuid = UUIDTools::UUID.timestamp_create
               self.send("#{name}=", uuid.raw)
             end

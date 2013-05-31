@@ -137,6 +137,15 @@ describe AttrUuid do
         it { expect(model.uuid).to eq @uuid.raw }
       end
 
+      context "when uuid is empty" do
+        before do
+          @uuid = UUIDTools::UUID.parse("40d5fafe-ff68-4606-9de7-554eae0d77a3")
+          UUIDTools::UUID.stub(:timestamp_create).and_return(@uuid)
+        end
+        subject(:model) { Dummy.create! {|o| o.uuid = ""} }
+        it { expect(model.uuid).to eq @uuid.raw }
+      end
+
       context "when uuid is set" do
         subject(:model) do
           @uuid = UUIDTools::UUID.parse("3e1fe985-2fbf-44ce-a5fb-d1b3db49260d")
