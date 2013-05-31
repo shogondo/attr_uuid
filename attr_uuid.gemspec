@@ -17,8 +17,11 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
+  gem.add_dependency "activerecord"
   gem.add_dependency "uuidtools"
 
+  gem.add_development_dependency "mysql2"
   gem.add_development_dependency "rspec"
   gem.add_development_dependency "simplecov"
+  gem.add_development_dependency "with_model"
 end

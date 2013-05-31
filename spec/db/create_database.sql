@@ -1,0 +1,1 @@
+CREATE DATABASE attr_uuid_test DEFAULT CHARACTER SET utf8;

@@ -1,0 +1,7 @@
+{
+    "adapter": "mysql2",
+    "username": "user"
+    "password": "password"
+    "database": "attr_uuid_test",
+    "encoding": "utf8"
+}
