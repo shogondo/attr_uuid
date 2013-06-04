@@ -12,49 +12,51 @@ module AttrUuid
   module ClassMethods
     def attr_uuid(name, options = {})
       name = name.to_s if name.is_a?(Symbol)
+      column_name = (options[:column_name] || name)
+      column_name = column_name.to_s if column_name.is_a?(Symbol)
 
-      if !name.is_a?(String)
+      if !name.is_a?(String) || !column_name.is_a?(String)
         return
       end
 
       define_method "formatted_#{name}" do
-        binary = self.send(name)
+        binary = self.send(column_name)
         return UUIDTools::UUID.parse_raw(binary).to_s
       end
 
       define_method "formatted_#{name}=" do |value|
         uuid = UUIDTools::UUID.parse(value)
-        self.send("#{name}=", uuid.raw)
+        self.send("#{column_name}=", uuid.raw)
       end
 
       define_method "hex_#{name}" do
-        binary = self.send(name)
+        binary = self.send(column_name)
         return UUIDTools::UUID.parse_raw(binary).hexdigest
       end
 
       define_method "hex_#{name}=" do |value|
         uuid = UUIDTools::UUID.parse_hexdigest(value)
-        self.send("#{name}=", uuid.raw)
+        self.send("#{column_name}=", uuid.raw)
       end
 
       if self < ActiveRecord::Base
         (class << self; self end).class_eval do
           define_method "find_by_formatted_#{name}" do |value|
             uuid = UUIDTools::UUID.parse(value)
-            return self.send("find_by_#{name}", uuid.raw)
+            return self.send("find_by_#{column_name}", uuid.raw)
           end
           define_method "find_by_hex_#{name}" do |value|
             uuid = UUIDTools::UUID.parse_hexdigest(value)
-            return self.send("find_by_#{name}", uuid.raw)
+            return self.send("find_by_#{column_name}", uuid.raw)
           end
         end
 
         if options[:autofill]
           before_create do
-            value = self.send(name)
+            value = self.send(column_name)
             if value.blank?
               uuid = UUIDTools::UUID.timestamp_create
-              self.send("#{name}=", uuid.raw)
+              self.send("#{column_name}=", uuid.raw)
             end
           end
         end
