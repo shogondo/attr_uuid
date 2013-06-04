@@ -114,6 +114,21 @@ describe AttrUuid do
           it { expect(result).to be_nil }
         end
       end
+
+      describe ".find_by_hex_xxx" do
+        before { model.save! }
+        subject(:result) { Dummy.find_by_hex_uuid(uuid) }
+
+        context "when uuid matched" do
+          let(:uuid) { "faea220ae94e442c9ca05b39753e3549" }
+          it { expect(result).to eq model }
+        end
+
+        context "when no uuid matched" do
+          let(:uuid) { "00000000e94e442c9ca05b39753e3549" }
+          it { expect(result).to be_nil }
+        end
+      end
     end
 
     context "when enable autofill" do

@@ -43,6 +43,10 @@ module AttrUuid
             uuid = UUIDTools::UUID.parse(value)
             return self.send("find_by_#{name}", uuid.raw)
           end
+          define_method "find_by_hex_#{name}" do |value|
+            uuid = UUIDTools::UUID.parse_hexdigest(value)
+            return self.send("find_by_#{name}", uuid.raw)
+          end
         end
 
         if options[:autofill]
