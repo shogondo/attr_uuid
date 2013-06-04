@@ -129,6 +129,21 @@ describe AttrUuid do
           let(:uuid) { "00000000-e94e-442c-9ca0-5b39753e3549" }
           it { expect(result).to be_nil }
         end
+
+        context "when uuid is nil" do
+          let(:uuid) { nil }
+          it { expect(result).to be_nil }
+        end
+
+        context "when uuid isn't String" do
+          let(:uuid) { 1 }
+          it { expect(result).to be_nil }
+        end
+
+        context "when uuid format is invalid" do
+          let(:uuid) { "invalid" }
+          it { expect(result).to be_nil }
+        end
       end
 
       describe ".find_by_hex_xxx" do
@@ -142,6 +157,21 @@ describe AttrUuid do
 
         context "when no uuid matched" do
           let(:uuid) { "00000000e94e442c9ca05b39753e3549" }
+          it { expect(result).to be_nil }
+        end
+
+        context "when uuid is nil" do
+          let(:uuid) { nil }
+          it { expect(result).to be_nil }
+        end
+
+        context "when uuid isn't String" do
+          let(:uuid) { 1 }
+          it { expect(result).to be_nil }
+        end
+
+        context "when uuid format is invalid" do
+          let(:uuid) { "invalid" }
           it { expect(result).to be_nil }
         end
       end

@@ -42,12 +42,20 @@ module AttrUuid
       if self < ActiveRecord::Base
         (class << self; self end).class_eval do
           define_method "find_by_formatted_#{name}" do |value|
-            uuid = UUIDTools::UUID.parse(value)
-            return self.send("find_by_#{column_name}", uuid.raw)
+            begin
+              uuid = UUIDTools::UUID.parse(value)
+              return self.send("find_by_#{column_name}", uuid.raw)
+            rescue
+              return nil
+            end
           end
           define_method "find_by_hex_#{name}" do |value|
-            uuid = UUIDTools::UUID.parse_hexdigest(value)
-            return self.send("find_by_#{column_name}", uuid.raw)
+            begin
+              uuid = UUIDTools::UUID.parse_hexdigest(value)
+              return self.send("find_by_#{column_name}", uuid.raw)
+            rescue
+              return nil
+            end
           end
         end
 
