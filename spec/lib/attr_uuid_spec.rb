@@ -59,6 +59,11 @@ describe AttrUuid do
       it "returns formatted attribute value" do
         expect(model.formatted_uuid).to eq "faea220a-e94e-442c-9ca0-5b39753e3549"
       end
+
+      context "when uuid is nil" do
+        before { model.uuid = nil }
+        it { expect(model.formatted_uuid).to be_nil }
+      end
     end
 
     describe "#formatted_xxx=" do
@@ -72,6 +77,11 @@ describe AttrUuid do
     describe "#hex_xxx" do
       it "returns hex digested attribute value" do
         expect(model.hex_uuid).to eq "faea220ae94e442c9ca05b39753e3549"
+      end
+
+      context "when uuid is nil" do
+        before { model.uuid = nil }
+        it { expect(model.hex_uuid).to be_nil }
       end
     end
 

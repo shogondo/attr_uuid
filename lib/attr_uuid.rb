@@ -21,7 +21,11 @@ module AttrUuid
 
       define_method "formatted_#{name}" do
         binary = self.send(column_name)
-        return UUIDTools::UUID.parse_raw(binary).to_s
+        if binary.nil?
+          return nil
+        else
+          return UUIDTools::UUID.parse_raw(binary).to_s
+        end
       end
 
       define_method "formatted_#{name}=" do |value|
@@ -31,7 +35,11 @@ module AttrUuid
 
       define_method "hex_#{name}" do
         binary = self.send(column_name)
-        return UUIDTools::UUID.parse_raw(binary).hexdigest
+        if binary.nil?
+          return nil
+        else
+          return UUIDTools::UUID.parse_raw(binary).hexdigest
+        end
       end
 
       define_method "hex_#{name}=" do |value|
