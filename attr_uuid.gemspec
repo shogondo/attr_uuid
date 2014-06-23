@@ -7,9 +7,9 @@ Gem::Specification.new do |gem|
   gem.name          = "attr_uuid"
   gem.version       = AttrUuid::VERSION
   gem.authors       = ["Shou Takenaka"]
-  gem.email         = ["shou_takenaka@guihua.jp"]
-  gem.description   = %q{This gem make binary uuid attribute easy to use}
-  gem.summary       = %q{Easy to use binay uuid attr}
+  gem.email         = ["sasaminn@gmail.com"]
+  gem.description   = %q{This gem makes binary uuid attribute easy to use}
+  gem.summary       = %q{Easy to use binay uuid attribute}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
