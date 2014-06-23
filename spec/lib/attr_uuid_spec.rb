@@ -32,26 +32,26 @@ describe AttrUuid do
 
     describe ".attr_uuid" do
       context "when argument is String" do
-        it { expect(model.respond_to?(:formatted_uuid)).to be_true }
-        it { expect(model.respond_to?(:formatted_uuid=)).to be_true }
-        it { expect(model.respond_to?(:hex_uuid)).to be_true }
-        it { expect(model.respond_to?(:hex_uuid=)).to be_true }
+        it { is_expected.to respond_to :formatted_uuid }
+        it { is_expected.to respond_to :formatted_uuid= }
+        it { is_expected.to respond_to :hex_uuid }
+        it { is_expected.to respond_to :hex_uuid= }
       end
 
       context "when argument is neither String nor Symbol" do
         subject(:model) { Model2.new }
-        it { expect(model.respond_to?(:formatted_1)).to be_false }
-        it { expect(model.respond_to?(:formatted_1=)).to be_false }
-        it { expect(model.respond_to?(:hex_1)).to be_false }
-        it { expect(model.respond_to?(:hex_1=)).to be_false }
+        it { is_expected.not_to respond_to :formatted_1 }
+        it { is_expected.not_to respond_to :formatted_1= }
+        it { is_expected.not_to respond_to :hex_1 }
+        it { is_expected.not_to respond_to :hex_1= }
       end
 
       context "when column alias name is neither String nor Symbol" do
         subject(:model) { Model3.new }
-        it { expect(model.respond_to?(:formatted_1)).to be_false }
-        it { expect(model.respond_to?(:formatted_1=)).to be_false }
-        it { expect(model.respond_to?(:hex_1)).to be_false }
-        it { expect(model.respond_to?(:hex_1=)).to be_false }
+        it { is_expected.not_to respond_to :formatted_1 }
+        it { is_expected.not_to respond_to :formatted_1= }
+        it { is_expected.not_to respond_to :hex_1 }
+        it { is_expected.not_to respond_to :hex_1= }
       end
     end
 
@@ -118,12 +118,12 @@ describe AttrUuid do
       end
 
       describe ".attr_uuid" do
-        it { expect(model.respond_to?(:formatted_uuid)).to be_true }
-        it { expect(model.respond_to?(:formatted_uuid=)).to be_true }
-        it { expect(model.respond_to?(:hex_uuid)).to be_true }
-        it { expect(model.respond_to?(:hex_uuid=)).to be_true }
-        it { expect(Dummy.respond_to?(:find_by_formatted_uuid)).to be_true }
-        it { expect(Dummy.respond_to?(:find_by_hex_uuid)).to be_true }
+        it { is_expected.to respond_to :formatted_uuid }
+        it { is_expected.to respond_to :formatted_uuid= }
+        it { is_expected.to respond_to :hex_uuid }
+        it { is_expected.to respond_to :hex_uuid= }
+        it { expect(Dummy).to respond_to :find_by_formatted_uuid }
+        it { expect(Dummy).to respond_to :find_by_hex_uuid }
       end
 
       describe ".find_by_formatted_xxx" do
@@ -210,12 +210,12 @@ describe AttrUuid do
       end
 
       describe ".attr_uuid" do
-        it { expect(model.respond_to?(:formatted_uuid)).to be_true }
-        it { expect(model.respond_to?(:formatted_uuid=)).to be_true }
-        it { expect(model.respond_to?(:hex_uuid)).to be_true }
-        it { expect(model.respond_to?(:hex_uuid=)).to be_true }
-        it { expect(Dummy.respond_to?(:find_by_formatted_uuid)).to be_true }
-        it { expect(Dummy.respond_to?(:find_by_hex_uuid)).to be_true }
+        it { is_expected.to respond_to :formatted_uuid }
+        it { is_expected.to respond_to :formatted_uuid= }
+        it { is_expected.to respond_to :hex_uuid }
+        it { is_expected.to respond_to :hex_uuid= }
+        it { expect(Dummy).to respond_to :find_by_formatted_uuid }
+        it { expect(Dummy).to respond_to :find_by_hex_uuid }
       end
 
       describe ".find_by_formatted_xxx" do
