@@ -112,23 +112,27 @@ describe AttrUuid do
         it { expect(model.uuid).to be_nil }
       end
 
-      subject(:model) do
+      let(:model) do
         uuid = UUIDTools::UUID.parse("faea220a-e94e-442c-9ca0-5b39753e3549")
         Dummy.new {|o| o.uuid = uuid.raw }
       end
 
       describe ".attr_uuid" do
+        subject { model }
         it { is_expected.to respond_to :formatted_uuid }
         it { is_expected.to respond_to :formatted_uuid= }
         it { is_expected.to respond_to :hex_uuid }
         it { is_expected.to respond_to :hex_uuid= }
+        it { expect(Dummy).to respond_to :find_all_by_formatted_uuid }
+        it { expect(Dummy).to respond_to :find_all_by_hex_uuid }
         it { expect(Dummy).to respond_to :find_by_formatted_uuid }
         it { expect(Dummy).to respond_to :find_by_hex_uuid }
       end
 
       describe ".find_by_formatted_xxx" do
-        before { model.save! }
         subject(:result) { Dummy.find_by_formatted_uuid(uuid) }
+
+        before { model.save! }
 
         context "when uuid matched" do
           let(:uuid) { "faea220a-e94e-442c-9ca0-5b39753e3549" }
@@ -153,6 +157,41 @@ describe AttrUuid do
         context "when uuid format is invalid" do
           let(:uuid) { "invalid" }
           it { expect(result).to be_nil }
+        end
+      end
+
+      describe ".find_all_by_formatted_xxx" do
+        subject(:result) { Dummy.find_all_by_formatted_uuid(uuid) }
+
+        let!(:model1) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("faea220a-e94e-442c-9ca0-5b39753e3549").raw }.save! }
+        let!(:model2) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("e7a8d36b-9bca-4a82-bebb-5fbd08cac267").raw }.save! }
+        let!(:model3) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("fd7d3422-450d-4066-8810-5970281879b4").raw }.save! }
+        let!(:model4) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("97fceb6b-db8d-42fb-b842-4b4371f8e795").raw }.save! }
+        let!(:model5) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("84ce3004-753f-4667-a9fa-b1177b37d989").raw }.save! }
+
+        context "when uuid matched" do
+          let(:uuid) { ["faea220a-e94e-442c-9ca0-5b39753e3549", "fd7d3422-450d-4066-8810-5970281879b4", "97fceb6b-db8d-42fb-b842-4b4371f8e795" ] }
+          it { expect(result).to eq [model1, model3, model4] }
+        end
+
+        context "when no uuid matched" do
+          let(:uuid) { ["00000000-e94e-442c-9ca0-5b39753e3549"] }
+          it { expect(result).to eq [] }
+        end
+
+        context "when uuid is nil" do
+          let(:uuid) { nil }
+          it { expect(result).to eq [] }
+        end
+
+        context "when uuid isn't String" do
+          let(:uuid) { 1 }
+          it { expect(result).to eq [] }
+        end
+
+        context "when uuid format is invalid" do
+          let(:uuid) { ["invalid"] }
+          it { expect(result).to eq [] }
         end
       end
 
