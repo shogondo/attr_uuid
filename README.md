@@ -52,10 +52,13 @@ Or install it yourself as:
         user.formatted_id  #=> "9f648b40-fa6e-11e3-a3ac-0800200c9a66"
 
 
-5. `attr_uuid` also adds `.find_by_hex_id` and `.find_by_formatted_id` method to retrive model from data store with an uuid string.
+5. `attr_uuid` also adds `.find_by_hex_id`, `.find_by_formatted_id`, `.find_all_by_hex_id` and `.find_all_by_formatted_id`
+methods to retrive model from data store with an uuid string.
 
         User.find_by_hex_id("337e0576cb664151a2e1e0fc04fb33d1")
         User.find_by_formatted_id("337e0576-cb66-4151-a2e1-e0fc04fb33d1")
+        User.find_all_by_hex_id(["337e0576cb664151a2e1e0fc04fb33d1", "5a038fcdfcd644b5bffa0245c7cfd7fa", "165a33cff2a947549d960d95adfd119a"])
+        User.find_all_by_formatted_id(["337e0576-cb66-4151-a2e1-e0fc04fb33d1", "5a038fcd-fcd6-44b5-bffa-0245c7cfd7fa", "165a33cf-f2a9-4754-9d96-0d95adfd119a"])
 
 ## Contributing
 
