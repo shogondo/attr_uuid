@@ -49,6 +49,22 @@ module AttrUuid
 
       if self < ActiveRecord::Base
         (class << self; self end).class_eval do
+          define_method "find_all_by_formatted_#{name}" do |value|
+            begin
+              ids = (Array.try_convert(value) || []).map { |o| UUIDTools::UUID.parse(o).raw }
+              self.where(column_name => ids)
+            rescue
+              return []
+            end
+          end
+          define_method "find_all_by_hex_#{name}" do |value|
+            begin
+              ids = (Array.try_convert(value) || []).map { |o| UUIDTools::UUID.parse_hexdigest(o).raw }
+              self.where(column_name => ids)
+            rescue
+              return []
+            end
+          end
           define_method "find_by_formatted_#{name}" do |value|
             begin
               uuid = UUIDTools::UUID.parse(value)

@@ -68,9 +68,9 @@ describe AttrUuid do
 
     describe "#formatted_xxx=" do
       it "updates original attribute" do
-        uuid = UUIDTools::UUID.parse("d8354fff-f782-4b86-b4a7-7db46a5426d7")
-        model.formatted_uuid = uuid.to_s
-        expect(model.uuid).to eq uuid.raw
+        o = UUIDTools::UUID.parse("d8354fff-f782-4b86-b4a7-7db46a5426d7")
+        model.formatted_uuid = o.to_s
+        expect(model.uuid).to eq o.raw
       end
     end
 
@@ -87,9 +87,9 @@ describe AttrUuid do
 
     describe "#hex_xxx=" do
       it "updates original attribute" do
-        uuid = UUIDTools::UUID.parse("d8354fff-f782-4b86-b4a7-7db46a5426d7")
-        model.hex_uuid = uuid.hexdigest
-        expect(model.uuid).to eq uuid.raw
+        o = UUIDTools::UUID.parse("d8354fff-f782-4b86-b4a7-7db46a5426d7")
+        model.hex_uuid = o.hexdigest
+        expect(model.uuid).to eq o.raw
       end
     end
   end
@@ -113,8 +113,8 @@ describe AttrUuid do
       end
 
       let(:model) do
-        uuid = UUIDTools::UUID.parse("faea220a-e94e-442c-9ca0-5b39753e3549")
-        Dummy.new {|o| o.uuid = uuid.raw }
+        id = UUIDTools::UUID.parse("faea220a-e94e-442c-9ca0-5b39753e3549")
+        Dummy.new {|o| o.uuid = id.raw }
       end
 
       describe ".attr_uuid" do
@@ -163,11 +163,11 @@ describe AttrUuid do
       describe ".find_all_by_formatted_xxx" do
         subject(:result) { Dummy.find_all_by_formatted_uuid(uuid) }
 
-        let!(:model1) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("faea220a-e94e-442c-9ca0-5b39753e3549").raw }.save! }
-        let!(:model2) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("e7a8d36b-9bca-4a82-bebb-5fbd08cac267").raw }.save! }
-        let!(:model3) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("fd7d3422-450d-4066-8810-5970281879b4").raw }.save! }
-        let!(:model4) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("97fceb6b-db8d-42fb-b842-4b4371f8e795").raw }.save! }
-        let!(:model5) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("84ce3004-753f-4667-a9fa-b1177b37d989").raw }.save! }
+        let!(:model1) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("faea220a-e94e-442c-9ca0-5b39753e3549").raw }.tap(&:save!) }
+        let!(:model2) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("e7a8d36b-9bca-4a82-bebb-5fbd08cac267").raw }.tap(&:save!) }
+        let!(:model3) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("fd7d3422-450d-4066-8810-5970281879b4").raw }.tap(&:save!) }
+        let!(:model4) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("97fceb6b-db8d-42fb-b842-4b4371f8e795").raw }.tap(&:save!) }
+        let!(:model5) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse("84ce3004-753f-4667-a9fa-b1177b37d989").raw }.tap(&:save!) }
 
         context "when uuid matched" do
           let(:uuid) { ["faea220a-e94e-442c-9ca0-5b39753e3549", "fd7d3422-450d-4066-8810-5970281879b4", "97fceb6b-db8d-42fb-b842-4b4371f8e795" ] }
@@ -176,6 +176,41 @@ describe AttrUuid do
 
         context "when no uuid matched" do
           let(:uuid) { ["00000000-e94e-442c-9ca0-5b39753e3549"] }
+          it { expect(result).to eq [] }
+        end
+
+        context "when uuid is nil" do
+          let(:uuid) { nil }
+          it { expect(result).to eq [] }
+        end
+
+        context "when uuid isn't String" do
+          let(:uuid) { 1 }
+          it { expect(result).to eq [] }
+        end
+
+        context "when uuid format is invalid" do
+          let(:uuid) { ["invalid"] }
+          it { expect(result).to eq [] }
+        end
+      end
+
+      describe ".find_all_by_hex_xxx" do
+        subject(:result) { Dummy.find_all_by_hex_uuid(uuid) }
+
+        let!(:model1) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse_hexdigest("faea220ae94e442c9ca05b39753e3549").raw }.tap(&:save!) }
+        let!(:model2) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse_hexdigest("e7a8d36b9bca4a82bebb5fbd08cac267").raw }.tap(&:save!) }
+        let!(:model3) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse_hexdigest("fd7d3422450d406688105970281879b4").raw }.tap(&:save!) }
+        let!(:model4) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse_hexdigest("97fceb6bdb8d42fbb8424b4371f8e795").raw }.tap(&:save!) }
+        let!(:model5) { Dummy.new {|o| o.uuid = UUIDTools::UUID.parse_hexdigest("84ce3004753f4667a9fab1177b37d989").raw }.tap(&:save!) }
+
+        context "when uuid matched" do
+          let(:uuid) { ["faea220ae94e442c9ca05b39753e3549", "fd7d3422450d406688105970281879b4", "97fceb6bdb8d42fbb8424b4371f8e795" ] }
+          it { expect(result).to eq [model1, model3, model4] }
+        end
+
+        context "when no uuid matched" do
+          let(:uuid) { ["00000000e94e442c9ca05b39753e3549"] }
           it { expect(result).to eq [] }
         end
 
@@ -244,8 +279,8 @@ describe AttrUuid do
       end
 
       subject(:model) do
-        uuid = UUIDTools::UUID.parse("faea220a-e94e-442c-9ca0-5b39753e3549")
-        Dummy.new {|o| o.x_uuid = uuid.raw }
+        id = UUIDTools::UUID.parse("faea220a-e94e-442c-9ca0-5b39753e3549")
+        Dummy.new {|o| o.x_uuid = id.raw }
       end
 
       describe ".attr_uuid" do
